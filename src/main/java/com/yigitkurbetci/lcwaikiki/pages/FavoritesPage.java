@@ -1,5 +1,6 @@
 package com.yigitkurbetci.lcwaikiki.pages;
 
+import io.qameta.allure.Step;  // Allure için Step importu
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -32,18 +33,21 @@ public class FavoritesPage extends BasePage {
     private WebElement favoriteProductName;
 
     // Favoriler sayfasına git
+    @Step("Favoriler sayfasına git")
     public void goToFavoritesPage() {
         waitForElementToBeClickable(favoritesButton);
         favoritesButton.click();
     }
 
     // Favorilerdeki ürün ismini al
+    @Step("Favorilerdeki ürün ismini al")
     public String getFavoriteProductName() {
         waitForElementToBeVisible(favoriteProductName);
         return favoriteProductName.getText().trim();
     }
 
     // Favorilerdeki ürünü doğrulamak için
+    @Step("Favorilerdeki ürünü doğrula")
     public void validateProductInFavorites() {
         // ProductListPage'den ürün ismini al
         String expectedProductName = productListPage.getProductNameFromList();

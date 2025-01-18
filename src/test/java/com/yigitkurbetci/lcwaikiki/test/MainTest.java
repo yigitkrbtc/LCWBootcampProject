@@ -11,9 +11,11 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import io.qameta.allure.*;
 
 import java.time.Duration;
-
+@Epic("LC Waikiki Testi")
+@Feature("Tam Senaryo Testleri")
 public class MainTest {
     private HomePage homePage;
     private LoginPage loginPage;
@@ -33,16 +35,18 @@ public class MainTest {
         favoritesPage=new FavoritesPage(DriverManager.getDriver(),productListPage);
     }
 
-
+    @Story("Kategorize Edilmiş Ürünün Sepete Eklenmesi ve Favoriler")
+    @Description("Ürün Kategorizasyonu,Ürün Seçimi,Seçilmiş Ürünü Sepete Ekleme, Sepette Ürün İncelenmesi ve Favorilere EKleme, Favorilerim kısmının incelenmesi")
+    @Severity(SeverityLevel.CRITICAL)
     @Test
     public void testEndToEndScenario() {
         // LC Waikiki ana sayfasına git
-        DriverManager.getDriver().get("https://www.lcw.com/");
-//         //Giriş yap sayfasına git
-//        homePage.navigateToLoginPage();
-//
-//        // Giriş yap
-//        loginPage.login("ykurbetci@gmail.com", "5mwVwbpg.BPb4rj");
+        homePage.navigateToBaseUrl();
+         //Giriş yap sayfasına git
+        homePage.navigateToLoginPage();
+
+        // Giriş yap
+        loginPage.login("ykurbetci@gmail.com", "5mwVwbpg.BPb4rj");
 
         //"Çocuk-Bebek" -> "KIZ ÇOCUK" -> "MONT VE KABAN" seçim işlemi.
         homePage.navigateToCategoryPage();
@@ -62,7 +66,7 @@ public class MainTest {
 //        productPage.openCart();
 
         // Statik doğrulama işlemleri
-        cartPage.validateCartWithStaticValues("LC Waikiki Mont", "Koyu Bej", 1);
+        cartPage.validateCartWithStaticValues("LC Waikiki Kaban", "Bej", 1);
 
         // Favorilere ekle
         cartPage.addToFavorites();

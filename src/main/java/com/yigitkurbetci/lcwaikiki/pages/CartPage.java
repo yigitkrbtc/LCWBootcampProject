@@ -1,5 +1,6 @@
 package com.yigitkurbetci.lcwaikiki.pages;
 
+import io.qameta.allure.Step;  // Allure için Step importu
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,7 +15,7 @@ public class CartPage extends BasePage {
     @FindBy(xpath = "//span[@class='rd-cart-item-price mb-15']")
     private WebElement productTotalPriceLeft; // Sol taraf: Ürün kartındaki toplam fiyat
 
-    @FindBy(xpath = "//div[@class='price-info-area']//span[@class='total-grand-box-amount'][normalize-space()='1.499,99 TL']")
+    @FindBy(xpath = "//div[@class='price-info-area']//span[@class='total-grand-box-amount']")
     private WebElement totalPriceRight; // Sağ taraf: Ödeme adımına geç alanındaki toplam fiyat
 
     @FindBy(xpath = "//i[@class='fa fa-heart-o']")
@@ -29,7 +30,7 @@ public class CartPage extends BasePage {
     @FindBy(xpath = "//span[@class='rd-cart-item-code']")
     private WebElement productNameElement; // Sepetteki ürün adı
 
-    @FindBy(xpath = "//strong[normalize-space()='Koyu Bej']")
+    @FindBy(xpath = "//strong[normalize-space()='Bej']")
     private WebElement productColorElement; // Sepetteki ürün rengi
 
     @FindBy(xpath = "//input[@value='1']")
@@ -37,6 +38,7 @@ public class CartPage extends BasePage {
 
     private WebDriverWait wait;
     private WebDriver driver;
+
     // Constructor: WebDriver dışarıdan alınıyor
     public CartPage(WebDriver driver) {
         this.driver = driver;
@@ -44,25 +46,30 @@ public class CartPage extends BasePage {
     }
 
     // Sol taraftaki ürün toplam fiyatını al
+    @Step("Sol taraftaki ürün toplam fiyatını al")
     public double getProductTotalPriceFromLeft() {
         String priceText = productTotalPriceLeft.getText(); // Örnek: "2.999,98 TL"
         return parsePrice(priceText);
     }
 
     // Sağ taraftaki toplam fiyatı al
+    @Step("Sağ taraftaki toplam fiyatı al")
     public double getTotalPriceFromRight() {
         String priceText = totalPriceRight.getText(); // Örnek: "2.999,98 TL"
         return parsePriceForRight(priceText);
     }
 
     // Favorilere ekle
+    @Step("Favorilere ekle butonuna tıklanması")
     public void addToFavorites() {
         waitForElementToBeClickable(addToFavoritesButton);
         clickElementWithJavaScript(addToFavoritesButton);
     }
 
     // Ödeme adımına geç
+    @Step("Ödeme adımına geç butonuna tıklanması")
     public void proceedToCheckout() {
+        scrollToElement(proceedToCheckoutButton);
         waitForElementToBeClickable(proceedToCheckoutButton);
         proceedToCheckoutButton.click();
     }
@@ -85,6 +92,7 @@ public class CartPage extends BasePage {
     }
 
     // Sepetteki ürün adedini al
+
     public int getProductQuantity() {
         waitForElementToBeVisible(productQuantityElement);
         String quantityText = productQuantityElement.getAttribute("value"); // Adet input içinden alınır
@@ -92,6 +100,7 @@ public class CartPage extends BasePage {
     }
 
     // Sepetteki ürün bilgilerini verilen statik değerlerle doğrula
+    @Step("Sepetteki ürün bilgilerini doğrula")
     public boolean validateCartItem(String expectedName, String expectedColor, int expectedQuantity) {
         return getProductFullName().equals(expectedName) &&
                 getProductColor().equals(expectedColor) &&
@@ -120,12 +129,14 @@ public class CartPage extends BasePage {
     private void waitForElementToBeClickable(WebElement element) {
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
+
     private void clickElementWithJavaScript(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click();", element);
     }
 
-    // Statik verilerle doğrulama y
+    // Statik verilerle doğrulama
+    @Step("Sepeti statik verilerle doğrula")
     public void validateCartWithStaticValues(String expectedName, String expectedColor, int expectedQuantity) {
         // Ürün bilgilerini doğrula
         boolean isValid = validateCartItem(expectedName, expectedColor, expectedQuantity);
@@ -139,5 +150,11 @@ public class CartPage extends BasePage {
         if (leftPrice != rightPrice) {
             throw new AssertionError("Sepetteki sol ve sağ fiyatlar eşleşmiyor!");
         }
+    }
+
+    // Scroll işlemi: Bir elementi görünür yapmak için scroll
+    private void scrollToElement(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});", element);
     }
 }

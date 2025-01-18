@@ -1,6 +1,6 @@
 package com.yigitkurbetci.lcwaikiki.pages;
 
-import com.yigitkurbetci.lcwaikiki.model.ProductInfo;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -13,7 +13,7 @@ import java.time.Duration;
 
 public class ProductPage extends BasePage {
 
-    @FindBy(xpath = "//button[contains(text(),'7-8 Yaş')]")
+    @FindBy(xpath = "//button[contains(text(),'5-6 Yaş')]")
     private WebElement size;
 
     @FindBy(xpath = "//button[normalize-space()='SEPETE EKLE']")
@@ -25,28 +25,17 @@ public class ProductPage extends BasePage {
     @FindBy(xpath = "//span[@class='badge-circle']")
     private WebElement cartBadge;
 
-//    @FindBy(xpath = "//span[@class='product-name']")
-//    private WebElement productName;
-//
-//    @FindBy(xpath = "//span[@class='product-color']")
-//    private WebElement productColor;
-//
-//    @FindBy(xpath = "//span[@class='product-price']")
-//    private WebElement productPrice;
-//
-//    @FindBy(xpath = "//input[@name='quantity']")
-//    private WebElement quantityInput;
-
     private WebDriverWait wait;
     private WebDriver driver;
+
     // Constructor: WebDriver dışarıdan alınıyor
     public ProductPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-
     // Beden Seçimi
+    @Step("Beden Seçimi")
     public void selectSize() {
         waitForElementToBeVisible(size);
         waitForElementToBeClickable(size);
@@ -54,14 +43,19 @@ public class ProductPage extends BasePage {
     }
 
     // Sepete ürün ekle
+    @Step("Ürün Sepete Eklenmesi")
     public void addToCart() {
         waitForElementToBeVisible(addToCartButton);
+
+        // Scroll işlemi: "Sepete Ekle" butonunu görünür yap
+        scrollToElement(addToCartButton);
+
         waitForElementToBeClickable(addToCartButton);
         clickElementWithJavaScript(addToCartButton);
-
     }
 
     // Sepeti aç
+    @Step("Sepetin Açılması")
     public void openCart() {
         waitForElementToBeVisible(cartButton);
         waitForElementToBeClickable(cartButton);
@@ -73,32 +67,8 @@ public class ProductPage extends BasePage {
         js.executeScript("arguments[0].click();", element);
     }
 
-//    // Ürün bilgilerini al
-//    public ProductInfo getProductInfo() {
-//        String name = productName.getText();
-//        String color = productColor.getText();
-//        int quantity = Integer.parseInt(quantityInput.getAttribute("value"));
-//
-//
-//        ProductInfo productInfo = new ProductInfo();
-//        productInfo.setProductName(name);
-//        productInfo.setProductColor(color);
-//
-//
-//
-//        return productInfo;
-//    }
-
-    // Bekleme metodları
-    private void waitForElementToBeVisible(WebElement element) {
-        wait.until(driver -> element.isDisplayed());
-    }
-
-    private void waitForElementToBeClickable(WebElement element) {
-        wait.until(ExpectedConditions.elementToBeClickable(element));
-    }
-
     // Sepete ürün eklenmesi ve "Sepetim" tuşuna tıklama işlemi
+    @Step("Sepetim Sayfasına Erişim Sağlanması")
     public void openCartAfterAddingProduct() {
         addToCart();  // Ürünü sepete ekleme işlemi
 
@@ -112,9 +82,18 @@ public class ProductPage extends BasePage {
         cartButton.click();  // Sepetim tuşuna tıklayın
     }
 
+    // Scroll işlemi: Bir elementi görünür yapmak için scroll
+    private void scrollToElement(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});", element);
+    }
 
+    // Bekleme metodları
+    private void waitForElementToBeVisible(WebElement element) {
+        wait.until(driver -> element.isDisplayed());
+    }
 
-
-
-
+    private void waitForElementToBeClickable(WebElement element) {
+        wait.until(ExpectedConditions.elementToBeClickable(element));
+    }
 }

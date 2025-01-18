@@ -1,9 +1,9 @@
 package com.yigitkurbetci.lcwaikiki.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -32,10 +32,10 @@ public class ProductListPage extends BasePage {
 
     @FindBy(xpath = "(//div[@class='product-card__product-info'])[4]")
     private WebElement fourthProduct;
-
+    //Filtre kısmının scroll'u
     @FindBy(xpath="//div[@class='desktop-filter-area desktop-filter-area--fixed']")
     private WebElement scrollableContainer;
-
+    //Beden kısmının scroll'u
     @FindBy(xpath="//div[@class='collapsible-filter-container__content-area collapsible-filter-container__content-area--size-filter']")
     private WebElement sizeContainer;
 
@@ -50,6 +50,7 @@ public class ProductListPage extends BasePage {
 
     private WebDriverWait wait;
     private WebDriver driver;
+
     // Constructor: WebDriver dışarıdan alınıyor
     public ProductListPage(WebDriver driver) {
         this.driver = driver;
@@ -59,20 +60,20 @@ public class ProductListPage extends BasePage {
     public String getProductNameFromList() {
         return favoriteProductNameElement.getText().trim();
     }
-    public void selectAgeGroups() {
 
-        selectSizeOption(scrollableContainer,sizeContainer,ageGroup6);
+    @Step("6,6-7,5-6 Yaş gruplarının seçimi")
+    public void selectAgeGroups() {
+        selectSizeOption(scrollableContainer, sizeContainer, ageGroup6);
         waitForProductListUpdate();
-        scrollToActivateSizeScroll(sizeContainer,ageGroup6to7);
+        scrollToActivateSizeScroll(sizeContainer, ageGroup6to7);
         clickElementWithJavaScript(ageGroup6to7);
         waitForProductListUpdate();
-        scrollToActivateSizeScroll(sizeContainer,ageGroup5to6);
+        scrollToActivateSizeScroll(sizeContainer, ageGroup5to6);
         clickElementWithJavaScript(ageGroup5to6);
         waitForProductListUpdate();
-
     }
 
-
+    @Step("'BEJ' Renginin Seçilmesi")
     public void selectColor() {
         // 1. Site scroll'unu aşağı indirerek renk filter container'ını görebilecek şekilde kaydır
         scrollToElement(colorContainer);
@@ -82,10 +83,9 @@ public class ProductListPage extends BasePage {
         clickElementWithJavaScript(colorBeige);  // Bej rengini seç
         waitForProductListUpdate();
         driver.navigate().refresh();
-
-
     }
 
+    @Step("Ürünlerin 'En Çok Satanlar' Filtrelenmesi")
     public void sortByBestSellers() {
         scrollToElement(sortDropdown);
         waitForElementToBeVisible(sortDropdown);
@@ -98,9 +98,10 @@ public class ProductListPage extends BasePage {
 
         // Ürünlerin yenilenmesini bekle
         waitForProductListUpdate();
+        driver.navigate().refresh();
     }
 
-
+    @Step("Dördüncü ürüne tıklama")
     public void clickFourthProduct() {
         waitForElementToBeVisible(fourthProduct);
         clickElementWithJavaScript(fourthProduct);
@@ -123,9 +124,11 @@ public class ProductListPage extends BasePage {
     private void waitForElementToBeVisible(WebElement element) {
         wait.until(driver -> element.isDisplayed());
     }
+
     private void waitForElementToBeClickable(WebElement element) {
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
+
     private void clickElementWithJavaScript(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click();", element);
@@ -136,7 +139,8 @@ public class ProductListPage extends BasePage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='product-grid']")));
     }
 
-    public void selectSizeOption( WebElement filterContainer, WebElement sizeContainer, WebElement targetAgeGroup) {
+    @Step("Spesifik yaş grubunun scroll aracılığı ile bulunup seçilmesi")
+    public void selectSizeOption(WebElement filterContainer, WebElement sizeContainer, WebElement targetAgeGroup) {
         // 1. Adım: Sitenin scroll'unu aşağı indir
         scrollToActivateSiteScroll();
 
@@ -154,10 +158,10 @@ public class ProductListPage extends BasePage {
     }
 
     // Adım 1: Sitenin scroll'unu aşağı indir
-    private void scrollToActivateSiteScroll( ) {
+    private void scrollToActivateSiteScroll() {
         waitForPageToRefresh();
         JavascriptExecutor js = (JavascriptExecutor) driver;
-         js.executeScript("window.scrollBy(0, 500);");
+        js.executeScript("window.scrollBy(0, 500);");
         // Sayfanın tamamen yüklenmesini bekle
     }
 
@@ -199,6 +203,7 @@ public class ProductListPage extends BasePage {
                         Integer.parseInt(container.getAttribute("clientHeight"));
     }
 
+    @Step("Favorilerdeki ürün isminin kontrol edilmesi")
     public void validateProductInFavorites(String expectedProductName) {
         // Favoriler sayfasındaki ürün ismini al
         String favoriteProductName = favoriteProductNameElement.getText().trim();
@@ -209,10 +214,10 @@ public class ProductListPage extends BasePage {
         }
     }
 
+
     public void scrollToAvoidCookiePopup(WebElement targetElement) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("window.scrollBy(0, 50);"); // Çerez bildirimini geçmek için kaydırma
         js.executeScript("arguments[0].scrollIntoView(true);", targetElement);
     }
-
 }

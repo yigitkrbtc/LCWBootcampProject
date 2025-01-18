@@ -12,6 +12,7 @@ public class LoginPage extends BasePage {
     private WebDriver driver;
     private WebDriverWait wait;
 
+
     @FindBy(name = "emailAndPhone")
     private WebElement emailField;
 
@@ -53,7 +54,7 @@ public class LoginPage extends BasePage {
         wait.until(ExpectedConditions.visibilityOf(passwordField));
         wait.until(ExpectedConditions.visibilityOf(loginButton));// Şifre alanı göründü mü kontrol et
         enterPasswordAndLogin(password);
-        wait.until(ExpectedConditions.urlContains("https://www.lcw.com/")); // Giriş sonrası doğru URL'yi kontrol et
+        navigateToBaseUrl();
     }
 
 }
