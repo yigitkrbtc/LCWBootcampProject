@@ -204,16 +204,6 @@ public class ProductListPage extends BasePage {
                         Integer.parseInt(container.getAttribute("clientHeight"));
     }
 
-    @Step("Favorilerdeki ürün isminin kontrol edilmesi")
-    public void validateProductInFavorites(String expectedProductName) {
-        // Favoriler sayfasındaki ürün ismini al
-        String favoriteProductName = favoriteProductNameElement.getText().trim();
-
-        // İki ismin eşleşip eşleşmediğini kontrol et
-        if (!favoriteProductName.equals(expectedProductName)) {
-            throw new AssertionError("Favorilerdeki ürün ismi eşleşmiyor! Beklenen: " + expectedProductName + ", Bulunan: " + favoriteProductName);
-        }
-    }
 
 
     public void scrollToAvoidCookiePopup(WebElement targetElement) {

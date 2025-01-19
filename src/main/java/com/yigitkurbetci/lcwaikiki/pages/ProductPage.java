@@ -54,13 +54,6 @@ public class ProductPage extends BasePage {
         clickElementWithJavaScript(addToCartButton);
     }
 
-    // Sepeti aç
-    @Step("Sepetin Açılması")
-    public void openCart() {
-        waitForElementToBeVisible(cartButton);
-        waitForElementToBeClickable(cartButton);
-        cartButton.click();
-    }
 
     private void clickElementWithJavaScript(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
