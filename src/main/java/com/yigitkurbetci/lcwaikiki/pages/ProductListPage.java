@@ -103,6 +103,7 @@ public class ProductListPage extends BasePage {
 
     @Step("Dördüncü ürüne tıklama")
     public void clickFourthProduct() {
+        scrollToElement(fourthProduct);
         waitForElementToBeVisible(fourthProduct);
         clickElementWithJavaScript(fourthProduct);
         driver.navigate().refresh();
